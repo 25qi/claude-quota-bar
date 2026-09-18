@@ -95,7 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         if let usage {
             let percent = "\(Int(usage.percent5h.rounded()))%"
-            let title = compact ? percent : "\(percent)·\(Self.tightClock(usage.fiveHour.resetsAt))"
+            let title = compact ? percent : "\(percent)·\(Self.clock(usage.fiveHour.resetsAt))"
             button.attributedTitle = NSAttributedString(
                 string: title,
                 attributes: [
@@ -197,13 +197,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     // MARK: - Formatting
-
-    /// "5:50a" — the menu bar is the scarcest space on screen and every
-    /// character risks the whole item being pushed behind the notch, so the
-    /// separator spaces and the "m" go. The dropdown carries the full time.
-    private static func tightClock(_ date: Date) -> String {
-        String(clock(date).dropLast())
-    }
 
     /// "5:30am" — lowercase, no leading zero.
     private static func clock(_ date: Date) -> String {

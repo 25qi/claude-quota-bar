@@ -2,9 +2,12 @@
 
 A tiny macOS menu bar readout of your Claude subscription quota.
 
-```
-20% · 5:50am
-```
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/preview-dark.png">
+    <img src="docs/preview-light.png" alt="Claude Quota Bar showing 65%·5:20pm in the menu bar, with its dropdown open" width="400">
+  </picture>
+</p>
 
 That is the whole interface: how much of the current 5-hour window you have used,
 and when it resets. Click it for the 7-day window and a refresh button.
