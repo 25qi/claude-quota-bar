@@ -45,13 +45,18 @@ cat > "$DEST/Contents/Info.plist" <<PLIST
 PLIST
 
 # Signing is required, or SMAppService will refuse to register for login.
+# swift build has already ad-hoc signed the binary, so codesign always reports
+# "replacing existing signature"; stay quiet on success, show output on failure.
 echo "==> Signing"
-codesign --force --sign - "$DEST" >/dev/null
+if ! SIGN_OUTPUT=$(codesign --force --sign - "$DEST" 2>&1); then
+    echo "$SIGN_OUTPUT" >&2
+    exit 1
+fi
 
 echo "==> Launching"
 open "$DEST"
 
 echo
 echo "Installed: $DEST"
-echo "On first run macOS asks for keychain access. Choose \"Always Allow\"."
+echo "On first run macOS asks whether \`security\` may read \"Claude Code-credentials\". Choose \"Always Allow\"."
 echo "Then tick \"Launch at Login\" in the menu bar dropdown and forget about it."
