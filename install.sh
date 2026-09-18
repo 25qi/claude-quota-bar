@@ -5,22 +5,22 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-APP_NAME="Claude Quota Bar"
+APP_NAME="Claude Usage Tide"
 DEST="$HOME/Applications/${APP_NAME}.app"
 
 echo "==> Building"
 swift build -c release
 
 echo "==> Stopping the running copy, if any"
-pkill -f "${APP_NAME}.app/Contents/MacOS/ClaudeQuotaBar" 2>/dev/null || true
+pkill -f "${APP_NAME}.app/Contents/MacOS/ClaudeUsageTide" 2>/dev/null || true
 # Wait for it to actually exit, or `open` below just refocuses the old process.
 for _ in $(seq 1 20); do
-    pgrep -f "${APP_NAME}.app/Contents/MacOS/ClaudeQuotaBar" >/dev/null || break
+    pgrep -f "${APP_NAME}.app/Contents/MacOS/ClaudeUsageTide" >/dev/null || break
     sleep 0.25
 done
 
 echo "==> Bundling"
-./bundle.sh .build/release/ClaudeQuotaBar "$DEST"
+./bundle.sh .build/release/ClaudeUsageTide "$DEST"
 
 echo "==> Launching"
 open "$DEST"

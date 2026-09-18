@@ -34,7 +34,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // re-creation dropped the item back next to the notch, which is also
         // the first spot to be hidden when the menu bar overflows.
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.autosaveName = "ClaudeQuotaBar"
+        statusItem.autosaveName = "ClaudeUsageTide"
         render()
 
         // Both callbacks below are delivered on the main thread (a main-run-loop
@@ -202,7 +202,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Set by bundle.sh when the Homebrew formula builds the app.
     private static let managedByHomebrew =
-        Bundle.main.object(forInfoDictionaryKey: "CQBManagedByHomebrew") as? Bool ?? false
+        Bundle.main.object(forInfoDictionaryKey: "ManagedByHomebrew") as? Bool ?? false
 
     private static var launchAtLoginEnabled: Bool {
         SMAppService.mainApp.status == .enabled

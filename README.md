@@ -1,9 +1,9 @@
-# Claude Quota Bar
+# Claude Usage Tide
 
 A tiny macOS menu bar app that shows your Claude subscription usage.
 
 <p align="center">
-  <img src="docs/preview.gif" alt="Clicking Claude Quota Bar in the menu bar to open its dropdown" width="400">
+  <img src="docs/preview.gif" alt="Clicking Claude Usage Tide in the menu bar to open its dropdown" width="400">
 </p>
 
 The menu bar shows how much of the 5-hour window you have used and when it resets, as in `65%·5:20pm`. It updates every 5 minutes. The dropdown adds the 7-day window.
@@ -15,17 +15,17 @@ Inspired by [Claude Usage Tracker](https://github.com/hamed-elfayome/Claude-Usag
 ### Homebrew
 
 ```bash
-brew install 25qi/tap/claude-quota-bar
-brew services start claude-quota-bar
+brew install 25qi/tap/claude-usage-tide
+brew services start claude-usage-tide
 ```
 
-`brew services` starts it now and at every login. Update with `brew upgrade claude-quota-bar`.
+`brew services` starts it now and at every login. Update with `brew upgrade claude-usage-tide`.
 
 ### From source
 
 ```bash
-git clone https://github.com/25qi/claude-quota-bar.git
-cd claude-quota-bar
+git clone https://github.com/25qi/claude-usage-tide.git
+cd claude-usage-tide
 ./install.sh
 ```
 
@@ -59,13 +59,13 @@ The token is only sent to `api.anthropic.com`. It is never logged or stored.
 **The item is missing.** On notched MacBooks, macOS hides menu bar items that don't fit. Hold <kbd>⌘</kbd> and drag it towards the clock. If it still doesn't fit, turn on **Compact Display** to show just the percentage. If the item is hidden, you can turn it on from Terminal:
 
 ```bash
-defaults write com.qi.claude-quota-bar compactTitle -bool true
-pkill -f "Claude Quota Bar.app"; open ~/Applications/"Claude Quota Bar.app"
+defaults write com.qi.claude-usage-tide compactTitle -bool true
+pkill -f "Claude Usage Tide.app"; open ~/Applications/"Claude Usage Tide.app"
 ```
 
 **The number is grey.** The token has expired or the network is down. Open the dropdown to see which. If it stays grey, run `claude auth status`.
 
-**Check without the UI:** `./.build/release/ClaudeQuotaBar --probe`
+**Check without the UI:** `./.build/release/ClaudeUsageTide --probe`
 
 ## License
 

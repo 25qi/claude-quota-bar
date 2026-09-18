@@ -15,23 +15,23 @@ MANAGED="false"
 
 rm -rf "$DEST"
 mkdir -p "$DEST/Contents/MacOS"
-cp "$BINARY" "$DEST/Contents/MacOS/ClaudeQuotaBar"
+cp "$BINARY" "$DEST/Contents/MacOS/ClaudeUsageTide"
 
 cat > "$DEST/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleExecutable</key><string>ClaudeQuotaBar</string>
-    <key>CFBundleIdentifier</key><string>com.qi.claude-quota-bar</string>
-    <key>CFBundleName</key><string>Claude Quota Bar</string>
+    <key>CFBundleExecutable</key><string>ClaudeUsageTide</string>
+    <key>CFBundleIdentifier</key><string>com.qi.claude-usage-tide</string>
+    <key>CFBundleName</key><string>Claude Usage Tide</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>1.0.0</string>
-    <key>CFBundleVersion</key><string>1</string>
+    <key>CFBundleShortVersionString</key><string>1.1.0</string>
+    <key>CFBundleVersion</key><string>2</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <!-- Menu bar only: no Dock icon, no cmd-tab entry. -->
     <key>LSUIElement</key><true/>
-    <key>CQBManagedByHomebrew</key><${MANAGED}/>
+    <key>ManagedByHomebrew</key><${MANAGED}/>
 </dict>
 </plist>
 PLIST
