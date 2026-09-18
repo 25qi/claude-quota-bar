@@ -6,7 +6,7 @@ A tiny macOS menu bar app that shows your Claude subscription usage.
   <img src="docs/preview.gif" alt="Clicking Claude Quota Bar in the menu bar to open its dropdown" width="400">
 </p>
 
-The menu bar shows how much of the 5-hour window you have used and when it resets. In `65%·5:20pm`, 5:20pm is the reset time, not the current time. It updates every 5 minutes. The dropdown adds the 7-day window.
+The menu bar shows how much of the 5-hour window you have used and when it resets, as in `65%·5:20pm`. It updates every 5 minutes. The dropdown adds the 7-day window.
 
 Inspired by [Claude Usage Tracker](https://github.com/hamed-elfayome/Claude-Usage-Tracker) by [@hamed-elfayome](https://github.com/hamed-elfayome), which is also where the rate-limit header approach comes from. This is a stripped-down version: just the usage reading, with no settings, profiles or updater.
 
