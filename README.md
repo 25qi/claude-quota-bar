@@ -3,12 +3,25 @@
 A tiny macOS menu bar app that shows your Claude subscription usage.
 
 <p align="center">
-  <img src="docs/preview-light.png" alt="Claude Quota Bar showing 65%·5:20pm in the menu bar, with its dropdown open" width="400">
+  <img src="docs/preview.gif" alt="Clicking Claude Quota Bar in the menu bar to open its dropdown" width="400">
 </p>
 
-The menu bar shows the 5-hour window's usage and reset time. The dropdown adds the 7-day window.
+The menu bar shows the 5-hour window's usage and reset time, updated every 5 minutes. The dropdown adds the 7-day window.
+
+Inspired by [Claude Usage Tracker](https://github.com/hamed-elfayome/Claude-Usage-Tracker) by [@hamed-elfayome](https://github.com/hamed-elfayome), which is also where the rate-limit header approach comes from. This is a stripped-down version: just the usage reading, with no settings, profiles or updater.
 
 ## Install
+
+### Homebrew
+
+```bash
+brew install 25qi/tap/claude-quota-bar
+brew services start claude-quota-bar
+```
+
+`brew services` starts it now and at every login. Update with `brew upgrade claude-quota-bar`.
+
+### From source
 
 ```bash
 git clone https://github.com/25qi/claude-quota-bar.git
@@ -16,10 +29,11 @@ cd claude-quota-bar
 ./install.sh
 ```
 
-1. macOS asks whether `security` may read "Claude Code-credentials". Choose **Always Allow**. This is how the app reads Claude Code's token.
-2. In the dropdown, tick **Launch at Login**.
+Then tick **Launch at Login** in the dropdown. Run `./install.sh` again to update.
 
-Run `./install.sh` again to update.
+### First run
+
+macOS asks whether `security` may read "Claude Code-credentials". Choose **Always Allow**. This is how the app reads Claude Code's token.
 
 **Requirements:** macOS 13+, Swift 5.9+, and Claude Code installed and signed in.
 

@@ -144,10 +144,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         narrow.state = compact ? .on : .off
         menu.addItem(narrow)
 
-        let login = NSMenuItem(title: "Launch at Login", action: #selector(toggleLaunchAtLogin), keyEquivalent: "")
-        login.target = self
-        login.state = Self.launchAtLoginEnabled ? .on : .off
-        menu.addItem(login)
+        // Under Homebrew, `brew services` owns launch at login. Offering our own
+        // toggle too would register a second launcher and start the app twice.
+        if !Self.managedByHomebrew {
+            let login = NSMenuItem(title: "Launch at Login", action: #selector(toggleLaunchAtLogin), keyEquivalent: "")
+            login.target = self
+            login.state = Self.launchAtLoginEnabled ? .on : .off
+            menu.addItem(login)
+        }
 
         menu.addItem(.separator())
 
@@ -195,6 +199,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         render()
     }
+
+    /// Set by bundle.sh when the Homebrew formula builds the app.
+    private static let managedByHomebrew =
+        Bundle.main.object(forInfoDictionaryKey: "CQBManagedByHomebrew") as? Bool ?? false
 
     private static var launchAtLoginEnabled: Bool {
         SMAppService.mainApp.status == .enabled
