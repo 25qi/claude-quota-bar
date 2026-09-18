@@ -3,10 +3,7 @@
 A tiny macOS menu bar readout of your Claude subscription quota.
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/preview-dark.png">
-    <img src="docs/preview-light.png" alt="Claude Quota Bar showing 65%·5:20pm in the menu bar, with its dropdown open" width="400">
-  </picture>
+  <img src="docs/preview-light.png" alt="Claude Quota Bar showing 65%·5:20pm in the menu bar, with its dropdown open" width="400">
 </p>
 
 That is the whole interface: how much of the current 5-hour window you have used,
