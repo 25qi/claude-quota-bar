@@ -26,7 +26,7 @@ enum UsageFetcher {
         var errorDescription: String? {
             switch self {
             case .unauthorized:
-                return "Token expired. Waiting for Claude Code to renew it."
+                return "Token expired and renewal has not taken yet. Retrying automatically."
             case .badResponse(let code):
                 return "API returned \(code)"
             case .missingHeaders:

@@ -6,6 +6,7 @@ import ServiceManagement
 /// Design rule for this app: it should be installed once and then never need
 /// attention. Nothing here blocks on setup, no failure is fatal, and the poll
 /// loop keeps running through errors, sleep, and network drops.
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var statusItem: NSStatusItem!
@@ -36,8 +37,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.autosaveName = "ClaudeQuotaBar"
         render()
 
+        // Both callbacks below are delivered on the main thread (a main-run-loop
+        // timer, a `.main` queue observer), so asserting main-actor isolation
+        // is accurate rather than a cast.
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
-            self?.refresh()
+            MainActor.assumeIsolated { self?.refresh() }
         }
         timer?.tolerance = 30
 
@@ -48,7 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.refresh()
+            MainActor.assumeIsolated { self?.refresh() }
         }
 
         refresh()
@@ -94,7 +98,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let button = statusItem.button else { return }
 
         if let usage {
-            let percent = "\(Int(usage.percent5h.rounded()))%"
+            let percent = "\(Self.whole(usage.percent5h))%"
             let title = compact ? percent : "\(percent)·\(Self.clock(usage.fiveHour.resetsAt))"
             button.attributedTitle = NSAttributedString(
                 string: title,
@@ -159,7 +163,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let reset = style == .time
             ? Self.clock(window.resetsAt)
             : Self.dayClock(window.resetsAt)
-        return info("\(label)   \(Int(window.percent.rounded()))%   resets \(reset)")
+        return info("\(label)   \(Self.whole(window.percent))%   resets \(reset)")
     }
 
     private func info(_ text: String) -> NSMenuItem {
@@ -198,6 +202,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Formatting
 
+    /// Rounds for display. `Int(_:)` traps on NaN or infinity, and a header that
+    /// ever carried either should not be able to take the app down.
+    private static func whole(_ value: Double) -> Int {
+        value.isFinite ? Int(value.rounded()) : 0
+    }
+
     /// "5:30am" — lowercase, no leading zero.
     private static func clock(_ date: Date) -> String {
         let f = DateFormatter()
@@ -223,26 +233,30 @@ private extension Usage {
 /// `--probe` runs one fetch, prints the reading, and exits. Useful for checking
 /// the credential + network path without opening the UI. Never prints the token.
 if CommandLine.arguments.contains("--probe") {
-    let semaphore = DispatchSemaphore(value: 0)
-    var status: Int32 = 0
-    Task {
+    // Detached so the work cannot inherit the main actor: the main thread is
+    // parked in dispatchMain() below, and a task queued behind it would never run.
+    Task.detached {
         do {
             let usage = try await UsageFetcher.fetch()
             let f = DateFormatter()
             f.dateFormat = "yyyy-MM-dd HH:mm"
             print(String(format: "5h  %5.1f%%  resets %@", usage.fiveHour.percent, f.string(from: usage.fiveHour.resetsAt)))
             print(String(format: "7d  %5.1f%%  resets %@", usage.sevenDay.percent, f.string(from: usage.sevenDay.resetsAt)))
+            exit(0)
         } catch {
             FileHandle.standardError.write(Data("\(error.localizedDescription)\n".utf8))
-            status = 1
+            exit(1)
         }
-        semaphore.signal()
     }
-    semaphore.wait()
-    exit(status)
+    dispatchMain()
 }
 
-let delegate = AppDelegate()
-let app = NSApplication.shared
-app.delegate = delegate
-app.run()
+// Top-level code runs on the main thread; say so, since AppDelegate is main-actor
+// isolated. NSApplication holds its delegate weakly, and run() never returns, so
+// the local keeps it alive for the life of the process.
+MainActor.assumeIsolated {
+    let delegate = AppDelegate()
+    let app = NSApplication.shared
+    app.delegate = delegate
+    app.run()
+}

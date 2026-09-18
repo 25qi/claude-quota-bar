@@ -46,7 +46,7 @@ PLIST
 
 # Signing is required, or SMAppService will refuse to register for login.
 echo "==> Signing"
-codesign --force --sign - "$DEST" >/dev/null 2>&1
+codesign --force --sign - "$DEST" >/dev/null
 
 echo "==> Launching"
 open "$DEST"

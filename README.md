@@ -9,7 +9,7 @@ A tiny macOS menu bar readout of your Claude subscription quota.
 That is the whole interface: how much of the current 5-hour window you have used,
 and when it resets. Click it for the 7-day window and a refresh button.
 
-Three source files, about 400 lines. No preference panes, no setup wizard, no
+Four source files, about 600 lines. No preference panes, no setup wizard, no
 auto-updater, no account switcher, no config file.
 
 ## Why this exists
@@ -59,7 +59,7 @@ That is the last time you need to touch it.
 ### Requirements
 
 - macOS 13 or later
-- Swift 6 toolchain (Xcode or Command Line Tools)
+- Swift 5.9 or later (Xcode or the Command Line Tools)
 - Claude Code installed and signed in — the app reads its existing credentials
   and has no login flow of its own
 
@@ -112,14 +112,28 @@ with the system. The app refreshes immediately on wake.
   and used only as the `Authorization` header on requests to `api.anthropic.com`.
 - It is never logged, never printed, never written anywhere, and never sent to any
   other host.
-- No analytics, no network calls other than the Messages API.
+- No analytics. The app itself talks only to the Messages API. When the stored
+  token has expired it runs the `claude` CLI to renew it, and that CLI makes its
+  own authenticated calls to Anthropic.
 
 ## Troubleshooting
 
 **I cannot find it in the menu bar.**
-On MacBooks with a notch, macOS hides overflow items behind the notch when the
-menu bar is crowded. Hold <kbd>⌘</kbd> and drag menu bar icons to reorder them,
-or quit something else to free up space.
+On MacBooks with a notch, macOS silently hides menu bar items that do not fit,
+starting with the ones nearest the notch — which is where a newly launched app's
+item lands. Hold <kbd>⌘</kbd> and drag it rightwards, towards the clock, so that
+something else gets pushed out instead. The position is remembered.
+
+If it still does not fit, shorten it to just the percentage with
+**Compact Display** in the dropdown. When the item is hidden you cannot reach
+that menu, so it can also be set from Terminal:
+
+```bash
+defaults write com.qi.claude-quota-bar compactTitle -bool true
+pkill -f "Claude Quota Bar.app"; open ~/Applications/"Claude Quota Bar.app"
+```
+
+Use `false` to switch back.
 
 **It shows a dash or the number is greyed out.**
 The token is expired or the network is down. Open the dropdown to see the reason.

@@ -7,8 +7,7 @@ import Foundation
 /// writes back to the keychain. Refresh tokens rotate on use, so a second
 /// process refreshing them races with Claude Code itself and invalidates both
 /// copies — the failure mode that makes other trackers drop out intermittently.
-/// When the token here is expired we surface a stale state and wait for Claude
-/// Code to renew it on its own.
+/// Renewing an expired token is left to the `claude` CLI; see `TokenRenewal`.
 enum Credentials {
 
     enum LookupError: LocalizedError {

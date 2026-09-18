@@ -10,6 +10,7 @@ import Foundation
 /// This is needed because an already-running Claude Code session holds its token
 /// in memory and does not write refreshed credentials back. Working all day in
 /// one session can leave the stored token expired for hours.
+@MainActor
 enum TokenRenewal {
 
     /// The free attempt: an auth command that touches no model. Costs nothing,
